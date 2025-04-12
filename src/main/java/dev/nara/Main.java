@@ -6,6 +6,8 @@ public class Main {
 
 	public static void main(String[] args) {
 		RandomVariableCalculator soal1 = new RandomVariableCalculator();
+		System.out.println("/// SOAL 1: ///");
+		System.out.println();
 		soal1.run();
 
 		Scanner sc = new Scanner(System.in);

@@ -101,7 +101,6 @@ public class RandomVariableCalculator {
 	}
 
 	public void run() {
-		System.out.println("/// SOAL 1: ///");
 		calculateExpectedValue(true);
 		calculateVariance();
 	}
