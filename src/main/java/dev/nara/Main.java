@@ -16,6 +16,8 @@ public class Main {
 		System.out.print("Masukkan jumlah pelemparan koin: ");
 		int K = sc.nextInt();
 		System.out.println("Membuka plot...");
-		new CoinFlipDistribution(K).plot();
+		CoinFlipDistribution cfd = new CoinFlipDistribution(K);
+		cfd.plot();
+		cfd.printCombinations();
 	}
 }

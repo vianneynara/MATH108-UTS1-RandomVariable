@@ -2,17 +2,23 @@ package dev.nara;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 public class CoinFlipDistribution {
 
     private final int K;
     private final Map<Integer, Double> distribution;
+    private final Map<Integer, List<List<String>>> combinationSets;
 
     public CoinFlipDistribution(int K) {
+		if (K > 21) {
+			System.err.println("Max K is 21! Switching to 21.");
+			K = 21;
+		}
         this.K = K;
         this.distribution = new HashMap<>();
+        this.combinationSets = new HashMap<>();
         calculateDistribution();
     }
 
@@ -20,17 +26,59 @@ public class CoinFlipDistribution {
      * Mendapatkan distribusinya
      * */
     private void calculateDistribution() {
-        final int jumlahSisi = 2;
-		final double probabilitasKejadian = 1.0 / jumlahSisi;
+		final List<String> outcome = List.of("H", "T");
+        final int jumlahSisi = outcome.size();
+        final double probabilitasKejadian = 1.0 / jumlahSisi;
 
-        for (int heads = 0; heads <= K; heads++) {
-            System.out.println("=== HEAD: " + heads);
-            long banyakPola = combine(K, heads);
+        for (int xCount = 0; xCount <= K; xCount++) {
+            System.out.println("=== HEAD: " + xCount);
+            long banyakPola = combine(K, xCount);
             System.out.println("n(X) = " + banyakPola);
             double probability = banyakPola * Math.pow(probabilitasKejadian, K);
             System.out.println("p(X) = " + probability);
-            distribution.put(heads, probability);
+            distribution.put(xCount, probability);
+
+			// buat kombinasi untuk semua kemungkinan berjumlah x
+            List<List<String>> combinations = generateCombinations(K, xCount);
+            combinationSets.put(xCount, combinations);
         }
+    }
+
+    /**
+     * Generate all possible combinations patterns of coin flips.
+     */
+    private List<List<String>> generateCombinations(int flips, int heads) {
+        List<List<String>> result = new ArrayList<>();
+        List<String> current = new ArrayList<>();
+
+        generateCombinations(flips, heads, 0, current, result);
+        return result;
+    }
+
+    /**
+     * Recursive helper to generate each possible combination patterns given the current index to flips,
+     * Setiap "depth" rekursif, {@param remainingHeads} dikurangi 1 hingga tidak tersisa.
+     * */
+    private void generateCombinations(int flips, int remainingHeads, int index, List<String> currCombination, List<List<String>> combinations) {
+		// base case: index setara dengan jumlah flip
+        if (index == flips) {
+            if (remainingHeads == 0) {
+                combinations.add(new ArrayList<>(currCombination));
+            }
+            return;
+        }
+
+        // Sisa kepala
+        if (remainingHeads > 0) {
+            currCombination.add("H");
+            generateCombinations(flips, remainingHeads - 1, index + 1, currCombination, combinations);
+            currCombination.remove(currCombination.size() - 1);
+        }
+
+        // Tambah Tail
+        currCombination.add("T");
+        generateCombinations(flips, remainingHeads, index + 1, currCombination, combinations);
+        currCombination.remove(currCombination.size() - 1);
     }
 
     /**
@@ -43,12 +91,26 @@ public class CoinFlipDistribution {
         k = Math.min(k, n - k);
         long result = 1;
 
-		// perhitungan faktor
+        // perhitungan faktor
         for (int i = 1; i <= k; i++) {
             result = result * (n - k + i) / i;
         }
 
         return result;
+    }
+
+    /**
+     * Print combinations/patterns for each possible number of heads (X).
+     */
+    public void printCombinations() {
+        for (int heads = 0; heads <= K; heads++) {
+            System.out.println("\n--- Kembinasi dengan " + heads + " heads ---");
+            List<List<String>> combinations = combinationSets.get(heads);
+            for (List<String> combination : combinations) {
+                System.out.println(combination);
+            }
+            System.out.println("Total kombinasi: " + combinations.size());
+        }
     }
 
     public void plot() {
