@@ -19,6 +19,7 @@ public class CoinFlipDistribution {
         this.K = K;
         this.distribution = new HashMap<>();
         this.combinationSets = new HashMap<>();
+
         calculateDistribution();
     }
 
@@ -48,11 +49,11 @@ public class CoinFlipDistribution {
      * Generate all possible combinations patterns of coin flips.
      */
     private List<List<String>> generateCombinations(int flips, int heads) {
-        List<List<String>> result = new ArrayList<>();
-        List<String> current = new ArrayList<>();
+        List<List<String>> combinations = new ArrayList<>();
+        List<String> currCombination = new ArrayList<>();
 
-        generateCombinations(flips, heads, 0, current, result);
-        return result;
+        generateCombinations(flips, heads, 0, currCombination, combinations);
+        return combinations;
     }
 
     /**
