@@ -16,8 +16,18 @@ public class Main {
 		System.out.print("Masukkan jumlah pelemparan koin: ");
 		int K = sc.nextInt();
 		System.out.println("Membuka plot...");
+
+        final long startTime = System.currentTimeMillis();
 		CoinFlipDistribution cfd = new CoinFlipDistribution(K);
+        final long endTime = System.currentTimeMillis();
+
 		cfd.plot();
+
+        final long sTime = System.currentTimeMillis();
 		cfd.printCombinations();
+        final long eTime = System.currentTimeMillis();
+
+        System.out.println("\nCalculation time taken: " + (endTime-startTime) + " ms");
+        System.out.println("Printing time taken: " + (eTime-sTime) + " ms");
 	}
 }
